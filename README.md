@@ -1,14 +1,16 @@
 # DYOM Mission File Specification
 
-A Python-based specification system for DYOM (Design Your Own Mission) mission files. This project uses Pydantic models to define the structure of DYOM missions and provides exporters to generate documentation in multiple formats.
+A comprehensive Python-based specification system for DYOM (Design Your Own Mission) mission files. This project uses Pydantic models to define the complete structure of DYOM missions and provides exporters to generate documentation in multiple formats.
 
 ## Features
 
-- **Type-safe Python models** using Pydantic for DYOM mission structure
-- **Validation** built-in validation for all mission data
-- **JSON Schema export** for integration with other tools
+- **Complete type-safe Python models** using Pydantic for all DYOM mission components
+- **22 objective types** fully documented and validated
+- **Built-in validation** for all mission data including bitfield flags and enums
+- **JSON Schema export** for integration with other tools and code generation
+- **Multi-file documentation** with separate pages for each model type
 - **Markdown documentation** for readable specifications
-- **HTML documentation** with styled, browser-viewable docs
+- **HTML documentation** with styled, browser-viewable docs and sidebar navigation
 
 ## Installation
 
@@ -54,78 +56,93 @@ This will create:
 ### Using the Models in Your Code
 
 ```python
-from models import Mission, MissionInfo, Position, Objective
+from models import (
+    Mission,
+    MissionInfo,
+    InitialSettings,
+    PlayerInitial,
+    ObjectiveCheckpoint,
+    ObjectiveActor,
+    Actor,
+    CheckpointShape
+)
 
 # Create a mission
 mission = Mission(
-    info=MissionInfo(
-        title="My First Mission",
+    mission=MissionInfo(
+        name="My First Mission",
         author="Creator Name",
-        description="An exciting mission"
+        intro_text_1="Welcome to my mission",
+        intro_text_2="Get ready for action",
+        intro_text_3="",
+        sound_filename="",
+        published=False
     ),
-    player_start_position=Position(x=0.0, y=0.0, z=3.0),
-    objectives=[
-        Objective(
-            id=1,
-            type="goto",
-            description="Go to the marker",
-            position=Position(x=100.0, y=100.0, z=3.0),
-            required=True
+    initial=InitialSettings(
+        timelimit=0,
+        day_time=12,
+        weather=0,
+        wanted_level_min=0,
+        wanted_level_max=6,
+        flags=0,
+        player=PlayerInitial(
+            interior=0,
+            position_x=2488.56,
+            position_y=-1666.84,
+            position_z=12.38,
+            direction=0.0,
+            skin=0,
+            health=100,
+            weapon=0,
+            ammo=1000000
         )
-    ]
+    ),
+    objectives=[
+        ObjectiveCheckpoint(
+            position_x=2500.0,
+            position_y=-1700.0,
+            position_z=13.0,
+            radius=2.0,
+            interior=0,
+            objective_type=2,
+            shape=CheckpointShape.BEACON,
+            radar_marker=4,
+            direction=0.0,
+            text="Go to the marker!"
+        ),
+        ObjectiveActor(
+            position_x=2510.0,
+            position_y=-1710.0,
+            position_z=13.0,
+            direction=90.0,
+            interior=0,
+            objective_type=5,
+            skin=102,
+            weapon=30,
+            ammo=500,
+            health=100,
+            accuracy=75,
+            radar_marker=0,
+            flags=0,
+            animation=-1,
+            animation_argument=0,
+            text="Kill the enemy!"
+        )
+    ],
+    actors=[],
+    cars=[],
+    pickups=[],
+    objects=[]
 )
 
 # Validate and export to JSON
 mission_json = mission.model_dump_json(indent=2)
 print(mission_json)
+
+# Access specific objective type
+if isinstance(mission.objectives[0], ObjectiveCheckpoint):
+    print(f"Checkpoint radius: {mission.objectives[0].radius}")
 ```
-
-## Project Structure
-
-```
-dyom_specification/
-├── models.py           # Pydantic models defining DYOM structure
-├── exporters.py        # Export functions for JSON/Markdown/HTML
-├── generate_docs.py    # Main script to generate documentation
-├── requirements.txt    # Python dependencies
-├── README.md          # This file
-└── output/            # Generated documentation (created on first run)
-```
-
-## Customizing the Specification
-
-The specification is defined in `models.py`. To customize it:
-
-1. **Add new fields** to existing models by adding class attributes
-2. **Add new models** by creating new classes that inherit from `BaseModel`
-3. **Add enums** for constrained string values
-4. **Update documentation** by modifying docstrings and field descriptions
-
-Example of adding a new field:
-
-```python
-class MissionInfo(BaseModel):
-    title: str = Field(..., description="Mission title")
-    author: str = Field(..., description="Mission creator's name")
-    # Add your new field here
-    release_date: Optional[str] = Field(None, description="Release date (YYYY-MM-DD)")
-```
-
-After making changes, run `generate_docs.py` to regenerate all documentation.
-
-## Model Structure Overview
-
-The main model hierarchy:
-
-- **DYOMMission** (root)
-  - **MissionInfo** - Basic metadata (title, author, description)
-  - **MissionSettings** - Global settings (weather, time, player stats)
-  - **Position** - 3D coordinates
-  - **Rotation** - Rotation angles
-  - **Actor** - NPCs/pedestrians
-  - **Vehicle** - Vehicles
-  - **Objective** - Mission objectives
-  - **Cutscene** - Cutscene sequences
 
 ## Export Formats
 
@@ -156,14 +173,6 @@ Styled web documentation with:
 
 **Tip**: Use multi-file mode (`--multi` flag) for large specifications to reduce context size and improve navigation.
 
-## Contributing
-
-To extend this specification:
-
-1. Update the models in `models.py`
-2. Add appropriate type hints and descriptions
-3. Run `generate_docs.py` to verify the output
-4. Check all three export formats (JSON, MD, HTML)
 
 ## License
 
@@ -171,6 +180,6 @@ This specification system is provided as-is for documenting DYOM mission files.
 
 ## Related Resources
 
-- DYOM official resources (add links as needed)
+- DYOM official resources
 - GTA San Andreas modding documentation
 - Pydantic documentation: https://docs.pydantic.dev/
