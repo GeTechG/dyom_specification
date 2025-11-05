@@ -5,7 +5,7 @@ Routes define paths for actors, vehicles, objects, and camera movements.
 They consist of multiple points that entities follow in sequence.
 """
 
-from typing import List
+from typing import List, Optional
 from enum import Enum
 from pydantic import BaseModel, Field
 
@@ -19,10 +19,10 @@ class RouteType(str, Enum):
     - DISPLACEMENT: Object displacement - moves object from initial position to new position when triggered
     - INVALID: Invalid or uninitialized route type
     """
-    ROUTE = "route"
-    MOVEMENT = "movement"
-    DISPLACEMENT = "displacement"
-    INVALID = "invalid"
+    ROUTE = "Route"
+    MOVEMENT = "Movement"
+    DISPLACEMENT = "Displacement"
+    INVALID = "Invalid"
 
 
 class RoutePoint(BaseModel):
@@ -31,23 +31,23 @@ class RoutePoint(BaseModel):
 
     Contains position and optional rotation information.
     """
-    position_x: float = Field(0.0, description="X coordinate of the point")
-    position_y: float = Field(0.0, description="Y coordinate of the point")
-    position_z: float = Field(0.0, description="Z coordinate of the point")
+    pos_x: float = Field(0.0, description="X coordinate of the point")
+    pos_y: float = Field(0.0, description="Y coordinate of the point")
+    pos_z: float = Field(0.0, description="Z coordinate of the point")
 
-    rotation_x: float = Field(0.0, description="X-axis rotation in degrees (used for camera movements)")
-    rotation_y: float = Field(0.0, description="Y-axis rotation in degrees (used for camera movements)")
-    rotation_z: float = Field(0.0, description="Z-axis rotation in degrees (used for camera movements)")
+    rot_x: float = Field(0.0, description="X-axis rotation in degrees (used for camera movements)")
+    rot_y: float = Field(0.0, description="Y-axis rotation in degrees (used for camera movements)")
+    rot_z: float = Field(0.0, description="Z-axis rotation in degrees (used for camera movements)")
 
     class Config:
         json_schema_extra = {
             "example": {
-                "position_x": 2495.0,
-                "position_y": -1688.0,
-                "position_z": 13.3,
-                "rotation_x": 0.0,
-                "rotation_y": 0.0,
-                "rotation_z": 90.0
+                "pos_x": 2495.0,
+                "pos_y": -1688.0,
+                "pos_z": 13.3,
+                "rot_x": 0.0,
+                "rot_y": 0.0,
+                "rot_z": 90.0
             }
         }
 
@@ -93,12 +93,12 @@ class Route(BaseModel):
     type: RouteType = Field(..., description="Type of route (route/movement/displacement)")
     points: List[RoutePoint] = Field(default_factory=list, description="List of points defining the path")
     loop: bool = Field(False, description="Whether the route loops back to the start (for routes and movements)")
-    duration: float = Field(
+    duration: Optional[float] = Field(
         1.0,
         description="Duration in seconds for displacement animation (only used for displacement type, not for routes or movements)",
         ge=0
     )
-    trigger_diameter: float = Field(1.0, description="Trigger radius for reaching waypoints (in game units)", ge=0)
+    trigger_diameter: Optional[float] = Field(1.0, description="Trigger radius for displacement animation (only used for displacement type)", ge=0)
 
     class Config:
         use_enum_values = True

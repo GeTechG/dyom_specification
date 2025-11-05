@@ -5,6 +5,7 @@ ObjectiveWeather - Change weather objective.
 from typing import Literal
 from pydantic import Field
 from .base import ObjectiveBase
+from .. import Weather
 
 
 class ObjectiveWeather(ObjectiveBase):
@@ -22,12 +23,7 @@ class ObjectiveWeather(ObjectiveBase):
     objective_type: Literal[11] = Field(11, description="Objective type (11 = Weather)")
 
     # Weather configuration
-    weather_id: int = Field(
-        0,
-        description="Weather ID (0-45, see GTA SA weather list)",
-        ge=0,
-        le=45
-    )
+    weather: Weather = Field(Weather.SUNNY_HEAT_CLEAR, description="Weather type. See Weather enum for all available options.")
 
     # Unused fields
     unused_1: float = Field(0.0, description="Unused field (float)")

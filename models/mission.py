@@ -5,10 +5,11 @@ This is the root structure that contains all mission data including metadata,
 initial settings, entities (actors, cars, objects, pickups), objectives, and routes.
 """
 
-from typing import List, Optional, Union
+from typing import List, Union
 from enum import IntEnum
 from pydantic import BaseModel, Field
 
+from .constants import Weather, Weapon, Skin
 from .actor import Actor
 from .car import Car
 from .object import Object
@@ -71,9 +72,9 @@ class PlayerInitial(BaseModel):
     position_y: float = Field(-1666.84, description="Y coordinate in game world")
     position_z: float = Field(12.38, description="Z coordinate in game world (height)")
     direction: float = Field(0.0, description="Facing direction in degrees (0-360)", ge=0, le=360)
-    skin: int = Field(0, description="Player skin/character model ID", ge=0)
-    health: int = Field(100, description="Player health percentage (0-200)", ge=0, le=200)
-    weapon: int = Field(0, description="Player starting weapon ID", ge=0)
+    skin: Skin = Field(0, description="Player skin/character model ID")
+    health: int = Field(100, description="Player health percentage (0-200)", ge=0)
+    weapon: Weapon = Field(0, description="Player starting weapon ID", ge=0)
     ammo: int = Field(1000000, description="Starting ammunition count", ge=0)
 
 
@@ -85,7 +86,7 @@ class InitialSettings(BaseModel):
     """
     timelimit: int = Field(0, description="Overall mission time limit in milliseconds (0 = no limit)", ge=0)
     day_time: int = Field(8, description="Starting hour of day (0-23)", ge=0, le=23)
-    weather: int = Field(0, description="Weather ID (0-45)", ge=0, le=45)
+    weather: Weather = Field(Weather.SUNNY_HEAT_CLEAR, description="Weather type. See Weather enum for all available options.")
     wanted_level_min: int = Field(0, description="Minimum wanted level (0-6)", ge=0, le=6)
     wanted_level_max: int = Field(6, description="Maximum wanted level (0-6)", ge=0, le=6)
     flags: int = Field(
@@ -105,11 +106,11 @@ class PathsCollection(BaseModel):
     Collection of all path/route types in the mission.
 
     Routes are paths that actors or vehicles follow sequentially.
-    Movements are camera paths during cutscenes.
+    Movements are object movement paths.
     Displacements are object movement animations from initial position to new position when triggered.
     """
     routes: List[Route] = Field(default_factory=list, description="Actor/vehicle movement paths - entities follow waypoints")
-    movements: List[Route] = Field(default_factory=list, description="Camera movement paths for cutscenes")
+    movements: List[Route] = Field(default_factory=list, description="Object movement paths")
     displacements: List[Route] = Field(default_factory=list, description="Object displacement paths - objects move to new position when triggered (uses duration field)")
 
 

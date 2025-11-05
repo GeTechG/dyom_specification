@@ -7,6 +7,8 @@ Represents collectible items in a DYOM mission including weapons, health, armor,
 from enum import IntEnum
 from pydantic import BaseModel, Field
 
+from models import ObjectModel
+
 
 class PickupBehaviour(IntEnum):
     """Behavior types for pickups.
@@ -40,11 +42,7 @@ class Pickup(BaseModel):
     """
 
     # Pickup type
-    object_id: int = Field(
-        ...,
-        description="Pickup object ID (1240=Health, 1241=Drugs, 1242=Armor, 1247=Police bribe, 370=Jetpack, 100=Weapon, 101=Custom object)",
-        ge=0
-    )
+    object_id: ObjectModel = Field(...,description="Pickup object ID")
 
     # Weapon-specific
     ammo: int = Field(0, description="Ammunition count for weapon pickups (0 = default)", ge=0)
