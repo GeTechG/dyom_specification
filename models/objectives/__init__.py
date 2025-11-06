@@ -6,7 +6,8 @@ Each objective represents a task the player must complete.
 Maximum 100 objectives per mission.
 """
 
-from .base import ObjectiveType, RadarMarker, ObjectiveBase
+from .base import ObjectiveType, ObjectiveBase
+from ..constants import RadarMarker
 from .actor import ObjectiveActor
 from .car import ObjectiveCar
 from .checkpoint import ObjectiveCheckpoint, CheckpointShape

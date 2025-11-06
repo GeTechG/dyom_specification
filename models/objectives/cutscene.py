@@ -15,13 +15,6 @@ class ObjectiveCutscene(ObjectiveBase):
     Displays a cinematic camera sequence with various behaviors (static, moving, following actors/player).
     The camera can move from the position to the target position, or follow entities.
 
-    The behaviour field is a composite bitfield:
-    - Bits 0-7 (masked by 255): Camera behavior type (0-8)
-    - Bit 8 (256): Slow motion effect
-    - Bit 9 (512): Camera shaking effect
-    - Bit 10 (1024): Skip fade in/out
-    - Bit 11 (2048): Skip widescreen cinematic bars
-
     Default text: "" (no text displayed during cutscenes)
     """
 

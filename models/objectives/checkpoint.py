@@ -6,6 +6,7 @@ from typing import Literal
 from enum import IntEnum
 from pydantic import Field
 from .base import ObjectiveBase
+from ..constants import RadarMarker
 
 
 class CheckpointShape(IntEnum):
@@ -50,13 +51,10 @@ class ObjectiveCheckpoint(ObjectiveBase):
     )
 
     # Radar marker
-    radar_marker: int = Field(
-        4,
-        description="Radar marker color ID (-1=None, 0=Red, 1=Green, 2=Blue, 3=White, 4=Yellow, )"
-    )
+    radar_marker: RadarMarker = Field(RadarMarker.YELLOW, description="Radar marker color")
 
     # Direction (for arrow/ring orientation)
-    direction: float = Field(0.0, description="Rotation for arrow/ring shapes in degrees (0-360, stored as negative value internally)", ge=0, le=360)
+    direction: float = Field(0.0, description="Rotation for arrow/ring shapes in degrees (0-360)")
 
     # Unknown/unused fields
     unknown_1: int = Field(0, description="Unknown field")

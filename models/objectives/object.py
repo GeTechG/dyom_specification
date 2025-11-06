@@ -7,6 +7,7 @@ from enum import IntEnum
 from pydantic import Field
 from .base import ObjectiveBase
 from ..object import ObjectModel
+from ..constants import RadarMarker
 
 
 class ObjectObjectiveType(IntEnum):
@@ -70,10 +71,7 @@ class ObjectiveObject(ObjectiveBase):
     )
 
     # Radar marker
-    radar_marker: int = Field(
-        2,
-        description="Radar marker color ID (-1=None, 0=Red, 1=Green, 2=Blue, 3=White, 4=Yellow, )"
-    )
+    radar_marker: RadarMarker = Field(RadarMarker.BLUE, description="Radar marker color")
 
     # Unused fields
     unused_1: int = Field(0, description="Unused field")

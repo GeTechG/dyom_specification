@@ -5,7 +5,7 @@ ObjectiveActor - Kill an enemy actor objective.
 from typing import Literal, Optional
 from pydantic import Field
 from .base import ObjectiveBase
-from .. import Skin, Animation, AnimationInfo
+from .. import Skin, Animation, AnimationInfo, RadarMarker
 
 
 class ObjectiveActor(ObjectiveBase):
@@ -30,10 +30,7 @@ class ObjectiveActor(ObjectiveBase):
     accuracy: int = Field(50, description="Shooting accuracy percentage (0-100)", ge=0, le=100)
 
     # Radar marker
-    radar_marker: int = Field(
-        0,
-        description="Radar marker color ID (-1=None, 0=Red, 1=Green, 2=Blue, 3=White, 4=Yellow)"
-    )
+    radar_marker: RadarMarker = Field(RadarMarker.RED, description="Radar marker color")
 
     hold_position: bool = Field(False, description="Hold position when attack")
     attack_direct: bool = Field(False, description="Immediate attack")

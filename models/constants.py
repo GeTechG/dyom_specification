@@ -164,6 +164,26 @@ class Weapon(IntEnum):
     RANDOM = 48
 
 
+class RadarMarker(IntEnum):
+    """
+    Radar marker color types for objectives.
+
+    Available colors:
+    - -1: None (no marker)
+    - 0: Red
+    - 1: Green
+    - 2: Blue
+    - 3: White
+    - 4: Yellow
+    """
+    NONE = -1
+    RED = 0
+    GREEN = 1
+    BLUE = 2
+    WHITE = 3
+    YELLOW = 4
+
+
 class Skin(RootModel[NonNegativeInt]):
     """Character skin/model ID for actors and players.
     """

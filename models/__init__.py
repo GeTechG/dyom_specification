@@ -4,17 +4,16 @@ DYOM Mission File Specification Models
 This package contains Pydantic models for DYOM (Design Your Own Mission) files.
 """
 
-from .actor import Actor, Animation, Gang, ActorFlags
+from .actor import Actor, Animation, Gang
 from .animation_info import AnimationInfo, VehicleSeat, DriverBehaviour
 from .car import Car
-from .constants import Weather, Weapon, Skin
+from .constants import Weather, Weapon, Skin, RadarMarker
 from .object import Object, ObjectModel
 from .pickup import Pickup, PickupBehaviour
 from .route import Route, RouteType, RoutePoint, RouteEntry
 from .mission import (
     Mission,
     MissionInfo,
-    MissionFlags,
     PlayerInitial,
     InitialSettings,
     PathsCollection,
@@ -22,7 +21,6 @@ from .mission import (
 )
 from .objectives import (
     ObjectiveType,
-    RadarMarker,
     ObjectiveActor,
     ObjectiveCar,
     ObjectiveCheckpoint,
@@ -61,7 +59,6 @@ __all__ = [
     "Actor",
     "Animation",
     "Gang",
-    "ActorFlags",
     "AnimationInfo",
 
     # Car models
@@ -84,7 +81,6 @@ __all__ = [
     # Mission models
     "Mission",
     "MissionInfo",
-    "MissionFlags",
     "PlayerInitial",
     "InitialSettings",
     "PathsCollection",

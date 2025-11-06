@@ -217,17 +217,6 @@ class Gang(IntEnum):
     ENEMY_2 = 26
 
 
-class ActorFlags(IntEnum):
-    """Behavior flags for actors (bitfield)."""
-    HOLD_POSITION = 2  # Bit 1: Actor stays at current position
-    ATTACK_DIRECT = 4  # Bit 2: Attack player directly (360° engagement)
-    FOLLOW = 8  # Bit 3: Follow player
-    HEADSHOT_IMMUNE = 16  # Bit 4: Immune to headshot kills
-    KILL_WHOLE_GANG = 32  # Bit 5: Objective requires killing all gang members
-    HEALTH_BAR = 64  # Bit 6: Show health bar for this actor
-    ENEMY_2 = 128  # Bit 7: Mark as secondary enemy type
-
-
 class Actor(BaseModel):
     """
     An actor (NPC/pedestrian) in a DYOM mission.
@@ -252,6 +241,7 @@ class Actor(BaseModel):
     attack_direct: bool = Field(False, description="Immediate attack")
     follow: bool = Field(False, description="If gang - Friend, follow player")
     headshot_immune: bool = Field(False, description="Headshot Immune")
+    kill_whole_gang: bool = Field(False, description="Objective requires killing all gang members")
     health_bar: bool = Field(False, description="Show health bar")
     enemy2: bool = Field(False, description="Is Enemy2 gang")
 
@@ -259,7 +249,7 @@ class Actor(BaseModel):
     weapon: int = Field(0, description="Weapon ID (0 = unarmed)", ge=0)
     ammo: int = Field(1000000, description="Ammunition count", ge=0)
     accuracy: int = Field(50, description="Shooting accuracy percentage (0-100)", ge=0, le=100)
-    health: int = Field(100, description="Health percentage (0-200, 100 = normal)", ge=0, le=200)
+    health: int = Field(100, description="Health percentage (0-200, 100 = normal)", ge=0)
 
     # Lifetime control
     spawn: int = Field(0, description="Objective number when actor spawns (0 = mission start)", ge=0)
@@ -287,7 +277,13 @@ class Actor(BaseModel):
                 "direction": 90.0,
                 "interior": 0,
                 "gang": 25,  # Gang.FRIEND
-                "flags": 0,
+                "hold_position": False,
+                "attack_direct": False,
+                "follow": False,
+                "headshot_immune": False,
+                "kill_whole_gang": False,
+                "health_bar": False,
+                "enemy2": False,
                 "weapon": 30,
                 "ammo": 500,
                 "accuracy": 75,

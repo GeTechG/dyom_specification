@@ -6,6 +6,7 @@ from typing import Literal
 from pydantic import Field
 from .base import ObjectiveBase
 from ..object import ObjectModel
+from ..constants import RadarMarker
 
 
 class ObjectivePickup(ObjectiveBase):
@@ -29,10 +30,7 @@ class ObjectivePickup(ObjectiveBase):
     ammo: int = Field(0, description="Ammunition count for weapon pickups", ge=0)
 
     # Radar marker
-    radar_marker: int = Field(
-        1,
-        description="Radar marker color ID (-1=None, 0=Red, 1=Green, 2=Blue, 3=White, 4=Yellow, )"
-    )
+    radar_marker: RadarMarker = Field(RadarMarker.GREEN, description="Radar marker color")
 
     collect_all: bool = Field(False, description="Player must collect all pickups with this object_id")
     counter: bool = Field(False, description="Show collection counter on screen")

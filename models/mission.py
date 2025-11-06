@@ -40,12 +40,6 @@ from .objectives import (
 )
 
 
-class MissionFlags(IntEnum):
-    """Global mission flags (bitfield)."""
-    RIOT = 2   # Bit 1: Enable riot mode in Los Santos
-    TIMED = 4  # Bit 2: Enable mission timer display
-
-
 class MissionInfo(BaseModel):
     """
     Basic mission metadata and information.
@@ -89,15 +83,10 @@ class InitialSettings(BaseModel):
     weather: Weather = Field(Weather.SUNNY_HEAT_CLEAR, description="Weather type. See Weather enum for all available options.")
     wanted_level_min: int = Field(0, description="Minimum wanted level (0-6)", ge=0, le=6)
     wanted_level_max: int = Field(6, description="Maximum wanted level (0-6)", ge=0, le=6)
-    flags: int = Field(
-        0,
-        description=(
-            "Mission flags bitfield - combine values using bitwise OR. "
-            "Available flags: RIOT=2, TIMED=4. "
-            "Example combinations: 0=none, 2=riot only, 4=timed only, 6=riot+timed (2+4)"
-        ),
-        ge=0
-    )
+
+    riot: bool = Field(False, description="Enable riot mode in Los Santos")
+    timed: bool = Field(False, description="Enable mission timer display")
+
     player: PlayerInitial = Field(default_factory=PlayerInitial, description="Player initial state")
 
 
@@ -191,7 +180,8 @@ class Mission(BaseModel):
                     "weather": 0,
                     "wanted_level_min": 0,
                     "wanted_level_max": 6,
-                    "flags": 0,
+                    "riot": False,
+                    "timed": False,
                     "player": {
                         "interior": 0,
                         "position_x": 2488.56,

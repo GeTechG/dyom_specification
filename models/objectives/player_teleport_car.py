@@ -6,6 +6,7 @@ from typing import Literal
 from pydantic import Field
 from .base import ObjectiveBase
 from ..car import CarModel
+from ..constants import RadarMarker
 
 
 class ObjectivePlayerTeleportCar(ObjectiveBase):
@@ -41,12 +42,8 @@ class ObjectivePlayerTeleportCar(ObjectiveBase):
     )
 
     # Radar marker
-    radar_marker: int = Field(
-        -1,
-        description="Radar marker color ID (-1=None, 0=Red, 1=Green, 2=Blue, 3=White, 4=Yellow, )"
-    )
+    radar_marker: RadarMarker = Field(RadarMarker.NONE, description="Radar marker color")
 
-    # Behavior and immunity flags (split from flags bitfield)
     immune_bullet: bool = Field(False, description="Vehicle is immune to bullets")
     immune_explosion: bool = Field(False, description="Vehicle is immune to explosions")
     immune_tyres: bool = Field(False, description="Vehicle tyres cannot be popped")
