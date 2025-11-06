@@ -8,24 +8,6 @@ from pydantic import Field
 from .base import ObjectiveBase
 
 
-class CutsceneBehaviour(IntEnum):
-    """Cutscene camera behavior modes."""
-    STATIC = 0
-    LINEAR = 1
-    SMOOTH = 2
-    ACTOR_FOLLOW = 3
-    ACTOR_1ST_PERSON = 4
-    ACTOR_3RD_PERSON = 5
-    PLAYER_FOLLOW = 6
-    PLAYER_1ST_PERSON = 7
-    PLAYER_3RD_PERSON = 8
-    MASK = 255
-    SLOW_MOTION = 256
-    CAMERA_SHAKING = 512
-    SKIP_FADING = 1024
-    SKIP_WIDESCREEN = 2048
-
-
 class ObjectiveCutscene(ObjectiveBase):
     """
     Cutscene objective - Play a camera cutscene.
@@ -64,24 +46,22 @@ class ObjectiveCutscene(ObjectiveBase):
         ge=0
     )
 
-    # Behavior (composite bitfield)
-    behaviour: int = Field(
+    behaviour_type: int = Field(
         0,
         description=(
-            "Cutscene behavior composite bitfield. "
-            "Bits 0-7 (value & 255): Camera mode - "
+            "Camera behavior type: "
             "0=Static, 1=Linear, 2=Smooth, 3=Actor follow, 4=Actor 1st person, 5=Actor 3rd person, "
-            "6=Player follow, 7=Player 1st person, 8=Player 3rd person. "
-            "Bit 8 (256): Slow motion. "
-            "Bit 9 (512): Camera shaking. "
-            "Bit 10 (1024): Skip fade in/out. "
-            "Bit 11 (2048): Skip widescreen bars. "
-            "Example: 258=Linear+Slow motion (1+256), 3=Actor follow"
+            "6=Player follow, 7=Player 1st person, 8=Player 3rd person"
         ),
-        ge=0
+        ge=0,
+        le=8
     )
 
-    # Actor reference (for actor-related behaviors)
+    slow_motion: bool = Field(False, description="Enable slow motion effect during cutscene")
+    camera_shaking: bool = Field(False, description="Enable camera shaking effect")
+    skip_fading: bool = Field(False, description="Skip fade in/out transitions")
+    skip_widescreen: bool = Field(False, description="Skip cinematic widescreen bars")
+
     actor_idx: int = Field(
         0,
         description="Actor index (0-99) to follow/view when using actor-related behaviors (3, 4, 5)",
@@ -113,7 +93,11 @@ class ObjectiveCutscene(ObjectiveBase):
                 "target_position_y": -1690.0,
                 "target_position_z": 15.0,
                 "duration": 3000,
-                "behaviour": 2,  # CutsceneBehaviour.SMOOTH
+                "behaviour_type": 2,  # CutsceneBehaviour.SMOOTH
+                "slow_motion": False,
+                "camera_shaking": False,
+                "skip_fading": False,
+                "skip_widescreen": False,
                 "actor_idx": 0,
                 "unused_1": 0,
                 "unused_2": 0,

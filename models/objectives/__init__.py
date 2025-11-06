@@ -10,8 +10,8 @@ from .base import ObjectiveType, RadarMarker, ObjectiveBase
 from .actor import ObjectiveActor
 from .car import ObjectiveCar
 from .checkpoint import ObjectiveCheckpoint, CheckpointShape
-from .pickup import ObjectivePickup, PickupObjectiveFlags
-from .cutscene import ObjectiveCutscene, CutsceneBehaviour
+from .pickup import ObjectivePickup
+from .cutscene import ObjectiveCutscene
 from .player_teleport import ObjectivePlayerTeleport
 from .countdown import ObjectiveCountdown
 from .player_teleport_car import ObjectivePlayerTeleportCar
@@ -37,8 +37,6 @@ __all__ = [
 
     # Enums
     "CheckpointShape",
-    "PickupObjectiveFlags",
-    "CutsceneBehaviour",
     "CitizenBehaviourMode",
     "ObjectObjectiveType",
 

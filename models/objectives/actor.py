@@ -2,9 +2,10 @@
 ObjectiveActor - Kill an enemy actor objective.
 """
 
-from typing import Literal
+from typing import Literal, Optional
 from pydantic import Field
 from .base import ObjectiveBase
+from .. import Skin, Animation, AnimationInfo
 
 
 class ObjectiveActor(ObjectiveBase):
@@ -20,7 +21,7 @@ class ObjectiveActor(ObjectiveBase):
     objective_type: Literal[5] = Field(5, description="Objective type (5 = Actor)")
 
     # Actor appearance
-    skin: int = Field(102, description="Skin/character model ID", ge=0)
+    skin: Skin = Field(..., description="Skin/character model ID (see skin list)")
 
     # Combat stats
     weapon: int = Field(0, description="Weapon ID (0 = unarmed)", ge=0)
@@ -31,25 +32,26 @@ class ObjectiveActor(ObjectiveBase):
     # Radar marker
     radar_marker: int = Field(
         0,
-        description="Radar marker color ID (-1=None, 0=Red, 1=Green, 2=Blue, 3=White, 4=Yellow, or custom RGB encoded as int)"
+        description="Radar marker color ID (-1=None, 0=Red, 1=Green, 2=Blue, 3=White, 4=Yellow)"
     )
 
-    # Behavior flags
-    flags: int = Field(
-        0,
-        description=(
-            "Behavior flags bitfield from ActorFlags - combine values using bitwise OR. "
-            "Available flags: "
-            "HOLD_POSITION=2, ATTACK_DIRECT=4, FOLLOW=8, HEADSHOT_IMMUNE=16, "
-            "KILL_WHOLE_GANG=32, HEALTH_BAR=64, ENEMY_2=128. "
-            "Example: 36=kill whole gang+headshot immune (32+4)"
-        ),
-        ge=0
-    )
+    hold_position: bool = Field(False, description="Hold position when attack")
+    attack_direct: bool = Field(False, description="Immediate attack")
+    follow: bool = Field(False, description="If gang - Friend, follow player")
+    headshot_immune: bool = Field(False, description="Headshot Immune")
+    kill_whole_gang: bool = Field(False, description="Objective requires killing all gang members")
+    health_bar: bool = Field(False, description="Show health bar")
+    enemy2: bool = Field(False, description="Is Enemy2 gang")
 
     # Animation
-    animation: int = Field(-1, description="Animation type (see Animation enum, -12 to 129)")
-    animation_argument: int = Field(0, description="Animation argument (route ID, seat, etc.)")
+    animation: Animation = Field(-1, description="Animation type for this actor")
+    animation_info: Optional[AnimationInfo] = Field(
+        None,
+        description=(
+            "Additional animation parameters (route, vehicle seat, driver behavior). "
+            "Only populated for animations that require additional context"
+        )
+    )
 
     # Unused field
     unused_1: int = Field(0, description="Unused field")
@@ -72,10 +74,16 @@ class ObjectiveActor(ObjectiveBase):
                 "ammo": 500,
                 "health": 100,
                 "accuracy": 75,
-                "radar_marker": 0,  # RadarMarker.RED
-                "flags": 0,
-                "animation": -1,  # Animation.NONE
-                "animation_argument": 0,
+                "radar_marker": 0,
+                "hold_position": False,
+                "attack_direct": False,
+                "follow": False,
+                "headshot_immune": False,
+                "kill_whole_gang": False,
+                "health_bar": False,
+                "enemy2": False,
+                "animation": -1,
+                "animation_info": None,
                 "unused_1": 0,
                 "text": "Kill the gang member!"
             }

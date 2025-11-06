@@ -5,6 +5,7 @@ ObjectiveCar - Drive or destroy a vehicle objective.
 from typing import Literal
 from pydantic import Field
 from .base import ObjectiveBase
+from ..car import CarModel
 
 
 class ObjectiveCar(ObjectiveBase):
@@ -12,7 +13,7 @@ class ObjectiveCar(ObjectiveBase):
     Car objective - Drive or destroy a vehicle.
 
     The player must either enter and drive a specific vehicle, or destroy it.
-    The objective type is determined by the MUST_DESTROY flag.
+    The objective type is determined by the must_destroy field.
     Default text: "Go to the car and enter it."
     """
 
@@ -20,29 +21,25 @@ class ObjectiveCar(ObjectiveBase):
     objective_type: Literal[1] = Field(1, description="Objective type (1 = Car)")
 
     # Vehicle properties
-    car_id: int = Field(526, description="Vehicle model ID", ge=0)
-    color_primary: int = Field(0, description="Primary color ID (0-126, -1=random)", ge=-1, le=126)
-    color_secondary: int = Field(36, description="Secondary color ID (0-126, -1=random)", ge=-1, le=126)
+    car_id: CarModel = Field(526, description="Vehicle model ID (400-611)")
+    color_primary: int = Field(0, description="Primary color ID (0-126, -1=random, see https://gta.fandom.com/wiki/Carcols.dat/GTASA)", ge=-1, le=126)
+    color_secondary: int = Field(36, description="Secondary color ID (0-126, -1=random, see https://gta.fandom.com/wiki/Carcols.dat/GTASA)", ge=-1, le=126)
     health: int = Field(1000, description="Vehicle health (0-1000)", ge=0, le=1000)
 
     # Radar marker
     radar_marker: int = Field(
         2,
-        description="Radar marker color ID (-1=None, 0=Red, 1=Green, 2=Blue, 3=White, 4=Yellow, or custom RGB encoded as int)"
+        description="Radar marker color ID (-1=None, 0=Red, 1=Green, 2=Blue, 3=White, 4=Yellow)"
     )
 
-    # Behavior flags
-    flags: int = Field(
-        0,
-        description=(
-            "Behavior and immunity flags bitfield from CarFlags - combine values using bitwise OR. "
-            "Available flags: "
-            "IMMUNE_BULLET=2, IMMUNE_EXPLOSION=4, IMMUNE_TYRES=8, IMMUNE_COLLISION=16, "
-            "LOCKED=32, HANDBRAKED=64, MUST_DESTROY=256, DRIVEBY=512. "
-            "Example: 256=destroy objective, 290=destroy+bullet immune+locked (256+2+32)"
-        ),
-        ge=0
-    )
+    # Behavior flags (unpacked from bitfield)
+    immune_bullet: bool = Field(False, description="Vehicle immune to bullet damage")
+    immune_explosion: bool = Field(False, description="Vehicle immune to explosions")
+    immune_tyres: bool = Field(False, description="Tyres cannot be popped")
+    immune_collision: bool = Field(False, description="Vehicle immune to collision damage")
+    locked: bool = Field(False, description="Vehicle doors locked")
+    handbraked: bool = Field(False, description="Handbrake engaged")
+    must_destroy: bool = Field(False, description="Objective requires destroying this vehicle")
 
     # Unused fields
     unused_1: int = Field(0, description="Unused field")
@@ -67,8 +64,14 @@ class ObjectiveCar(ObjectiveBase):
                 "color_primary": 1,
                 "color_secondary": 36,
                 "health": 1000,
-                "radar_marker": 2,  # RadarMarker.BLUE
-                "flags": 0,
+                "radar_marker": 2,
+                "immune_bullet": False,
+                "immune_explosion": False,
+                "immune_tyres": False,
+                "immune_collision": False,
+                "locked": False,
+                "handbraked": False,
+                "must_destroy": False,
                 "unused_1": 0,
                 "unused_2": 0,
                 "unused_3": 0,

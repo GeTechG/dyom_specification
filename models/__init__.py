@@ -45,8 +45,6 @@ from .objectives import (
     ObjectiveMoneySub,
     ObjectivePlayerAnimation,
     CheckpointShape,
-    PickupObjectiveFlags,
-    CutsceneBehaviour,
     CitizenBehaviourMode,
     ObjectObjectiveType,
 )
@@ -117,8 +115,6 @@ __all__ = [
     "ObjectiveMoneySub",
     "ObjectivePlayerAnimation",
     "CheckpointShape",
-    "PickupObjectiveFlags",
-    "CutsceneBehaviour",
     "CitizenBehaviourMode",
     "ObjectObjectiveType",
 ]

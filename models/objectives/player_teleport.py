@@ -5,6 +5,7 @@ ObjectivePlayerTeleport - Teleport player to a location objective.
 from typing import Literal
 from pydantic import Field
 from .base import ObjectiveBase
+from .. import Skin, Weapon
 
 
 class ObjectivePlayerTeleport(ObjectiveBase):
@@ -21,27 +22,10 @@ class ObjectivePlayerTeleport(ObjectiveBase):
     objective_type: Literal[7] = Field(7, description="Objective type (7 = Player Teleport)")
 
     # Player state changes
-    skin: int = Field(
-        0,
-        description="Player skin/character model ID to change to (0 = keep current skin)",
-        ge=0
-    )
-    weapon: int = Field(
-        0,
-        description="Weapon ID to give player (0 = no weapon change)",
-        ge=0
-    )
-    ammo: int = Field(
-        1,
-        description="Ammunition count for the weapon (1 = default ammo for weapon type)",
-        ge=0
-    )
-    health: int = Field(
-        100,
-        description="Player health to set (0-200, 100 = full health)",
-        ge=0,
-        le=200
-    )
+    skin: Skin = Field(0, description="Player skin/character model ID")
+    health: int = Field(100, description="Player health percentage (0-200)", ge=0)
+    weapon: Weapon = Field(0, description="Player starting weapon ID", ge=0)
+    ammo: int = Field(1000000, description="Starting ammunition count", ge=0)
 
     # Unused fields
     unused_1: int = Field(0, description="Unused field")

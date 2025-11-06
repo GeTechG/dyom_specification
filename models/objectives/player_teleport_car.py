@@ -5,6 +5,7 @@ ObjectivePlayerTeleportCar - Teleport player into a vehicle objective.
 from typing import Literal
 from pydantic import Field
 from .base import ObjectiveBase
+from ..car import CarModel
 
 
 class ObjectivePlayerTeleportCar(ObjectiveBase):
@@ -22,10 +23,14 @@ class ObjectivePlayerTeleportCar(ObjectiveBase):
     objective_type: Literal[9] = Field(9, description="Objective type (9 = Player Teleport Car)")
 
     # Vehicle properties
-    car_id: int = Field(405, description="Vehicle model ID", ge=0)
-    color_primary: int = Field(0, description="Primary color ID (0-126, -1=random)", ge=-1, le=126)
-    color_secondary: int = Field(36, description="Secondary color ID (0-126, -1=random)", ge=-1, le=126)
-    health: int = Field(1000, description="Vehicle health (0-1000)", ge=0, le=1000)
+    car_id: CarModel = Field(..., description="Vehicle model ID (400-611)")
+    color_primary: int = Field(...,
+                               description="Primary color ID (0-126, see https://gta.fandom.com/wiki/Carcols.dat/GTASA)",
+                               ge=0, le=126)
+    color_secondary: int = Field(...,
+                                 description="Secondary color ID (0-126, see https://gta.fandom.com/wiki/Carcols.dat/GTASA)",
+                                 ge=0, le=126)
+    health: int = Field(1000, description="Vehicle health (0-1000)")
 
     # Seat position
     seat: int = Field(
@@ -38,21 +43,18 @@ class ObjectivePlayerTeleportCar(ObjectiveBase):
     # Radar marker
     radar_marker: int = Field(
         -1,
-        description="Radar marker color ID (-1=None, 0=Red, 1=Green, 2=Blue, 3=White, 4=Yellow, or custom RGB encoded as int)"
+        description="Radar marker color ID (-1=None, 0=Red, 1=Green, 2=Blue, 3=White, 4=Yellow, )"
     )
 
-    # Behavior flags
-    flags: int = Field(
-        0,
-        description=(
-            "Behavior and immunity flags bitfield from CarFlags - combine values using bitwise OR. "
-            "Available flags: "
-            "IMMUNE_BULLET=2, IMMUNE_EXPLOSION=4, IMMUNE_TYRES=8, IMMUNE_COLLISION=16, "
-            "LOCKED=32, HANDBRAKED=64, MUST_DESTROY=256, DRIVEBY=512. "
-            "Example: 512=driveby mode enabled"
-        ),
-        ge=0
-    )
+    # Behavior and immunity flags (split from flags bitfield)
+    immune_bullet: bool = Field(False, description="Vehicle is immune to bullets")
+    immune_explosion: bool = Field(False, description="Vehicle is immune to explosions")
+    immune_tyres: bool = Field(False, description="Vehicle tyres cannot be popped")
+    immune_collision: bool = Field(False, description="Vehicle is immune to collision damage")
+    locked: bool = Field(False, description="Vehicle doors are locked")
+    handbraked: bool = Field(False, description="Vehicle handbrake is engaged")
+    must_destroy: bool = Field(False, description="Vehicle must be destroyed (mission requirement)")
+    driveby: bool = Field(False, description="Enable driveby mode for the vehicle")
 
     # Unused fields
     unused_1: int = Field(0, description="Unused field")
@@ -78,7 +80,14 @@ class ObjectivePlayerTeleportCar(ObjectiveBase):
                 "health": 1000,
                 "seat": 0,
                 "radar_marker": -1,
-                "flags": 0,
+                "immune_bullet": False,
+                "immune_explosion": False,
+                "immune_tyres": False,
+                "immune_collision": False,
+                "locked": False,
+                "handbraked": False,
+                "must_destroy": False,
+                "driveby": False,
                 "unused_1": 0,
                 "unused_2": 0,
                 "unused_3": 0,

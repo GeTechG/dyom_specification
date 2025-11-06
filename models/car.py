@@ -257,7 +257,7 @@ class Car(BaseModel):
     interior: int = Field(0, description="Interior ID (0 = outdoor)", ge=0)
 
     # Vehicle state
-    health: int = Field(1000, description="Vehicle health (0-1000+)", ge=0)
+    health: int = Field(1000, description="Vehicle health (0-1000+)")
     immune_bullet: bool = Field(False, description="Vehicle immune to bullet damage")
     immune_explosion: bool = Field(False, description="Vehicle immune to explosions")
     immune_tyres: bool = Field(False, description="Tyres cannot be popped")

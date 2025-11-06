@@ -3,18 +3,9 @@ ObjectivePickup - Collect a pickup objective.
 """
 
 from typing import Literal
-from enum import IntEnum
 from pydantic import Field
 from .base import ObjectiveBase
-
-
-class PickupObjectiveFlags(IntEnum):
-    """Flags for pickup objectives.
-        COLLECT_ALL = 2
-        COUNTER = 4
-    """
-    COLLECT_ALL = 2
-    COUNTER = 4
+from ..object import ObjectModel
 
 
 class ObjectivePickup(ObjectiveBase):
@@ -31,31 +22,20 @@ class ObjectivePickup(ObjectiveBase):
     objective_type: Literal[3] = Field(3, description="Objective type (3 = Pickup)")
 
     # Pickup properties
-    object_id: int = Field(
+    object_id: ObjectModel = Field(
         1210,
-        description="Pickup object ID (1240=Health, 1241=Drugs, 1242=Armor, 1247=Police bribe, 370=Jetpack, 100=Weapon, 101=Custom object)",
-        ge=0
+        description="Pickup object ID from GTA San Andreas"
     )
     ammo: int = Field(0, description="Ammunition count for weapon pickups", ge=0)
 
     # Radar marker
     radar_marker: int = Field(
         1,
-        description="Radar marker color ID (-1=None, 0=Red, 1=Green, 2=Blue, 3=White, 4=Yellow, or custom RGB encoded as int)"
+        description="Radar marker color ID (-1=None, 0=Red, 1=Green, 2=Blue, 3=White, 4=Yellow, )"
     )
 
-    # Behavior flags
-    flags: int = Field(
-        0,
-        description=(
-            "Pickup objective flags bitfield - combine values using bitwise OR. "
-            "Available flags: "
-            "COLLECT_ALL=2 (player must collect all pickups with this object_id), "
-            "COUNTER=4 (show collection counter on screen). "
-            "Example: 6=collect all with counter (2+4)"
-        ),
-        ge=0
-    )
+    collect_all: bool = Field(False, description="Player must collect all pickups with this object_id")
+    counter: bool = Field(False, description="Show collection counter on screen")
 
     # Unused fields (note: unused_1 is a float in the file structure)
     unused_1: float = Field(0.0, description="Unused field (float)")
@@ -81,8 +61,9 @@ class ObjectivePickup(ObjectiveBase):
                 "objective_type": 3,
                 "object_id": 1240,
                 "ammo": 0,
-                "radar_marker": 1,  # RadarMarker.GREEN
-                "flags": 0,
+                "radar_marker": 1,
+                "collect_all": False,
+                "counter": False,
                 "unused_1": 0.0,
                 "unused_2": 0,
                 "unused_3": 0,

@@ -6,6 +6,7 @@ from typing import Literal
 from enum import IntEnum
 from pydantic import Field
 from .base import ObjectiveBase
+from ..object import ObjectModel
 
 
 class ObjectObjectiveType(IntEnum):
@@ -35,23 +36,43 @@ class ObjectiveObject(ObjectiveBase):
     objective_type: Literal[19] = Field(19, description="Objective type (19 = Object)")
 
     # Object properties
-    object_id: int = Field(1221, description="Object model ID from GTA San Andreas", ge=0)
+    object_id: ObjectModel = Field(1221, description="Object model ID from GTA San Andreas")
 
     # Object rotation (note: rotation_z is in the position normally used for direction)
     rotation_x: float = Field(0.0, description="X-axis rotation in degrees", ge=0, le=360)
     rotation_y: float = Field(0.0, description="Y-axis rotation in degrees", ge=0, le=360)
     rotation_z: float = Field(0.0, description="Z-axis rotation in degrees", ge=0, le=360)
 
+    # Object behavior (unpacked from composite field)
+    behaviour: int | None = Field(
+        None,
+        description=(
+            "Object behavior type: "
+            "0 or None = None (static object), "
+            "1 = Displace when approached, "
+            "2 = Move along path - slow, "
+            "3 = Move along path - medium, "
+            "4 = Move along path - fast"
+        ),
+        ge=0,
+        le=4
+    )
+    route_id: int | None = Field(
+        None,
+        description="Route ID for objects with behavior 1-4 (displacement or movement along path)",
+        ge=1
+    )
+
     # Interaction type
     objective: ObjectObjectiveType = Field(
         ObjectObjectiveType.TOUCH,
-        description="Interaction type (0=Touch, 1=Damage, 2=Photograph, 3=Shoot)"
+        description="Interaction type"
     )
 
     # Radar marker
     radar_marker: int = Field(
         2,
-        description="Radar marker color ID (-1=None, 0=Red, 1=Green, 2=Blue, 3=White, 4=Yellow, or custom RGB encoded as int)"
+        description="Radar marker color ID (-1=None, 0=Red, 1=Green, 2=Blue, 3=White, 4=Yellow, )"
     )
 
     # Unused fields
@@ -77,6 +98,8 @@ class ObjectiveObject(ObjectiveBase):
                 "object_id": 1221,
                 "rotation_x": 0.0,
                 "rotation_y": 0.0,
+                "behaviour": None,
+                "route_id": None,
                 "objective": 0,  # ObjectObjectiveType.TOUCH
                 "radar_marker": 2,
                 "unused_1": 0,

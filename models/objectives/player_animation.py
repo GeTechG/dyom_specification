@@ -2,9 +2,10 @@
 ObjectivePlayerAnimation - Play player animation objective.
 """
 
-from typing import Literal
+from typing import Literal, Optional
 from pydantic import Field
 from .base import ObjectiveBase
+from .. import Animation, AnimationInfo
 
 
 class ObjectivePlayerAnimation(ObjectiveBase):
@@ -23,13 +24,13 @@ class ObjectivePlayerAnimation(ObjectiveBase):
     objective_type: Literal[22] = Field(22, description="Objective type (22 = Player Animation)")
 
     # Animation configuration
-    animation: int = Field(
-        -1,
-        description="Animation type (see Animation enum, -12 to 129, -1 = no animation)"
-    )
-    animation_argument: int = Field(
-        0,
-        description="Animation argument (route ID for movement animations, seat for vehicle, etc.)"
+    animation: Animation = Field(-1, description="Animation type for this actor")
+    animation_info: Optional[AnimationInfo] = Field(
+        None,
+        description=(
+            "Additional animation parameters (route, vehicle seat, driver behavior). "
+            "Only populated for animations that require additional context"
+        )
     )
 
     # Unused fields
@@ -54,8 +55,12 @@ class ObjectivePlayerAnimation(ObjectiveBase):
                 "direction": 0.0,
                 "interior": 0,
                 "objective_type": 22,
-                "animation": 5,
-                "animation_argument": 0,
+                "animation": -2,  # Animation.WALK
+                "animation_info": {
+                    "route": 399,
+                    "vehicle_seat": None,
+                    "driver_behaviour": None
+                },
                 "unused_1": 0.0,
                 "unused_2": 0,
                 "unused_3": 0,

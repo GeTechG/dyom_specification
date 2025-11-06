@@ -82,7 +82,7 @@ class ObjectiveBase(BaseModel):
     position_x: float = Field(..., description="X coordinate in game world")
     position_y: float = Field(..., description="Y coordinate in game world")
     position_z: float = Field(..., description="Z coordinate in game world (height)")
-    direction: float = Field(0.0, description="Facing direction in degrees (0-360)", ge=0, le=360)
+    direction: float = Field(0.0, description="Facing direction in degrees (0-360)")
     interior: int = Field(0, description="Interior ID (0 = outdoor)", ge=0)
 
     # Objective identification

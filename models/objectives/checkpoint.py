@@ -52,7 +52,7 @@ class ObjectiveCheckpoint(ObjectiveBase):
     # Radar marker
     radar_marker: int = Field(
         4,
-        description="Radar marker color ID (-1=None, 0=Red, 1=Green, 2=Blue, 3=White, 4=Yellow, or custom RGB encoded as int)"
+        description="Radar marker color ID (-1=None, 0=Red, 1=Green, 2=Blue, 3=White, 4=Yellow, )"
     )
 
     # Direction (for arrow/ring orientation)
