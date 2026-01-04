@@ -26,7 +26,7 @@ class ObjectiveActor(ObjectiveBase):
     # Combat stats
     weapon: int = Field(0, description="Weapon ID (0 = unarmed)", ge=0)
     ammo: int = Field(0, description="Ammunition count", ge=0)
-    health: int = Field(100, description="Health percentage (0-200)", ge=0, le=200)
+    health: int = Field(100, description="Health percentage (0-200)", ge=0)
     accuracy: int = Field(50, description="Shooting accuracy percentage (0-100)", ge=0, le=100)
 
     # Radar marker

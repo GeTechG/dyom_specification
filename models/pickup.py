@@ -7,7 +7,7 @@ Represents collectible items in a DYOM mission including weapons, health, armor,
 from enum import IntEnum
 from pydantic import BaseModel, Field
 
-from models import ObjectModel
+from .object import ObjectModel
 
 
 class PickupBehaviour(IntEnum):
