@@ -23,7 +23,7 @@ class ObjectiveWeather(ObjectiveBase):
     objective_type: Literal[11] = Field(11, description="Objective type (11 = Weather)")
 
     # Weather configuration
-    weather: Weather = Field(Weather.SUNNY_HEAT_CLEAR, description="Weather type. See Weather enum for all available options.")
+    weather_id: Weather = Field(Weather.SUNNY_HEAT_CLEAR, description="Weather type. See Weather enum for all available options.")
 
     # Unused fields
     unused_1: float = Field(0.0, description="Unused field (float)")
