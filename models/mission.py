@@ -5,9 +5,9 @@ This is the root structure that contains all mission data including metadata,
 initial settings, entities (actors, cars, objects, pickups), objectives, and routes.
 """
 
-from typing import List, Union
+from typing import List, Union, Annotated
 from enum import IntEnum
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, Field, Discriminator
 
 from .constants import Weather, Weapon, Skin
 from .actor import Actor
@@ -104,28 +104,31 @@ class PathsCollection(BaseModel):
 
 
 # Union type for all objective types - discriminated by objective_type field
-AnyObjective = Union[
-    ObjectiveCar,
-    ObjectiveCheckpoint,
-    ObjectivePickup,
-    ObjectiveActor,
-    ObjectiveCutscene,
-    ObjectivePlayerTeleport,
-    ObjectiveCountdown,
-    ObjectivePlayerTeleportCar,
-    ObjectiveTimeout,
-    ObjectiveWeather,
-    ObjectiveDayTime,
-    ObjectiveCitizenBehaviour,
-    ObjectiveWantedLevel,
-    ObjectiveTimelimit,
-    ObjectiveTimerStart,
-    ObjectivePlayerDisarm,
-    ObjectivePhoneCall,
-    ObjectiveObject,
-    ObjectiveMoneyAdd,
-    ObjectiveMoneySub,
-    ObjectivePlayerAnimation,
+AnyObjective = Annotated[
+    Union[
+        ObjectiveCar,
+        ObjectiveCheckpoint,
+        ObjectivePickup,
+        ObjectiveActor,
+        ObjectiveCutscene,
+        ObjectivePlayerTeleport,
+        ObjectiveCountdown,
+        ObjectivePlayerTeleportCar,
+        ObjectiveTimeout,
+        ObjectiveWeather,
+        ObjectiveDayTime,
+        ObjectiveCitizenBehaviour,
+        ObjectiveWantedLevel,
+        ObjectiveTimelimit,
+        ObjectiveTimerStart,
+        ObjectivePlayerDisarm,
+        ObjectivePhoneCall,
+        ObjectiveObject,
+        ObjectiveMoneyAdd,
+        ObjectiveMoneySub,
+        ObjectivePlayerAnimation,
+    ],
+    Discriminator('objective_type')
 ]
 
 
