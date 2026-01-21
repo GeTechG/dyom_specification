@@ -57,8 +57,8 @@ class ObjectiveCutscene(ObjectiveBase):
 
     actor_idx: int = Field(
         0,
-        description="Actor index (0-99) to follow/view when using actor-related behaviors (3, 4, 5)",
-        ge=0,
+        description="Actor index (0-99) to follow/view when using actor-related behaviors (3, 4, 5). -1 means no actor.",
+        ge=-1,
         le=99
     )
 

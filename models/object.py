@@ -132,7 +132,7 @@ class Object(BaseModel):
     rotation_y: float = Field(0.0, description="Y-axis rotation in degrees")
     rotation_z: float = Field(0.0, description="Z-axis rotation in degrees")
 
-    interior: int = Field(0, description="Interior ID (0-7, 0 = outdoor)", ge=0, le=7)
+    interior: int = Field(0, description="Interior ID (0 = outdoor)", ge=0)
     behaviour: int | None = Field(
         None,
         description=(
